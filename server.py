@@ -27,6 +27,10 @@ def calculate_budget():
     return jsonify({f"Your smart budget is ${smart_budget}"})
 
 
+if __name__ == "__main__":
+    app.run(host="134.122.123.99", port=5000)
+
+
 
 
 
