@@ -4,4 +4,3 @@ fastapi[standard]==0.115.0
 requests
 darts
 flask
-jsnofify
