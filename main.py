@@ -8,10 +8,10 @@ from darts.models import RNNModel
 from darts.utils.timeseries_generation import datetime_attribute_timeseries
 import json
 
-def create_datasets(user):
+def create_datasets(transactions):
     # df = pd.read_csv('data.csv')
-    data_str = transactions.get_transactions(user)
-    data = json.loads(data_str)
+    # data_str = transactions.get_transactions(user)
+    data = json.loads(transactions)
     df = pd.DataFrame(data)
     # df = df.drop('Unnamed: 0', axis=1)
     df['Date'] = pd.to_datetime(df['date'])

@@ -1,28 +1,33 @@
-from fastapi import FastAPI
+from flask import Flask, request, jsonify
 from pydantic import BaseModel
 from typing import List
 import main
 import transactions
 
-app = FastAPI()
+# app = FastAPI()
+app = Flask(__name__)
 
 class Transaction(BaseModel):
     date: str
     amount: float
     name: str
 
-@app.get("/")
+# @app.get("/")
+@app.route("/", methods=['GET'])
 def read_root():
-    return {"Hello": "World"}
+    return jsonify({"Hello": "World"})
 
-@app.post("/calculate_budget")
-def calculate_budget(user):
-    data = main.create_datasets(user)
+@app.route("/calculate_budget", methods=['POST'])
+def calculate_budget():
+    transactions = request.json.get('transactions')
+    if not transactions:
+        return jsonify({"error": "No transactions provided"}), 400
+    data = main.create_datasets(transactions)
     smart_budget = main.calculate_smart_budget(data)
-    return {f"Your smart budget is ${smart_budget}"}
+    return jsonify({f"Your smart budget is ${smart_budget}"})
 
 
-print(calculate_budget("josesm82@gmail.com"))
+
 
 
 
