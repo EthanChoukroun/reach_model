@@ -19,7 +19,7 @@ def read_root():
 
 @app.route("/calculate_budget", methods=['POST'])
 def calculate_budget():
-    transactions = request.json('transactions')
+    transactions = request.json
     if not transactions:
         return jsonify({"error": "No transactions provided"}), 400
     data = main.create_datasets(transactions)
