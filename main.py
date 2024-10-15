@@ -11,8 +11,8 @@ import json
 def create_datasets(transactions):
     # df = pd.read_csv('data.csv')
     # data_str = transactions.get_transactions(user)
-    data = json.loads(transactions)
-    df = pd.DataFrame(data)
+    # data = json.loads(transactions)
+    df = pd.DataFrame(transactions)
     # df = df.drop('Unnamed: 0', axis=1)
     df['Date'] = pd.to_datetime(df['date'])
     percentile_95 = df['amount'].abs().quantile(1)
