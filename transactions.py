@@ -14,4 +14,4 @@ def get_transactions(user):
 
     return response.text
 
-print(get_transactions("josesm82@gmail.com"))
+# print(get_transactions("josesm82@gmail.com"))

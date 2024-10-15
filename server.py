@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List
 import main
 import transactions
+import numpy as np
 
 # app = FastAPI()
 app = Flask(__name__)
@@ -21,14 +22,22 @@ def read_root():
 def calculate_budget():
     transactions = request.json
     if not transactions:
-        return jsonify({"error": "No transactions provided"}), 400
-    data = main.create_datasets(transactions)
-    smart_budget = main.calculate_smart_budget(data)
-    return jsonify({f"Your smart budget is ${smart_budget}"})
+        return jsonify({"error": "No transactions provided"}), 400\
+        
+    try:
+        data = main.create_datasets(transactions)
+        smart_budget = main.calculate_smart_budget(data)
+        if np.isnan(smart_budget):
+            return jsonify({'message': "Smart budget unavailable"})
+        return jsonify({'message': f"Your smart budget is ${smart_budget}"})
+    
+    except Exception as e:
+        return jsonify({'message': 'The smart budget unavailable'}), 500
 
 
 if __name__ == "__main__":
     app.run(host="134.122.123.99", port=5000)
+    # app.run(host="0.0.0.0", port=5000)
 
 
 
