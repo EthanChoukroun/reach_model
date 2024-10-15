@@ -36,7 +36,7 @@ def create_datasets(transactions):
 def calculate_smart_budget(data):
     #create time serie and load model
     ts = TimeSeries.from_dataframe(data,time_col='Date',value_cols= 'AccountBalance')
-    model_RNN = RNNModel.load_from_checkpoint('LSTM RNN', work_dir='../reach_model')
+    model_RNN = RNNModel.load_from_checkpoint('LSTM RNN', work_dir='reach_model')
 
     trf = Scaler()
     month_series = datetime_attribute_timeseries(
