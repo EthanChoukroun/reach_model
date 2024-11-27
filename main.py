@@ -7,7 +7,7 @@ from darts.dataprocessing.transformers import Scaler
 from darts.models import RNNModel
 from darts.utils.timeseries_generation import datetime_attribute_timeseries
 import json
-import db
+# import db
 
 def create_datasets(transactions):
     # df = pd.read_csv('data.csv')
@@ -30,13 +30,13 @@ def create_datasets(transactions):
     # df_train = df_indexed[df_indexed['Date'].dt.year == 2023]
     # df_train['AccountBalance'] = df_train['AccountBalance'] + min(df_train['AccountBalance'])
     df_test = df_indexed[df_indexed['Date'] >= (df_indexed['Date'].iloc[-1] - pd.DateOffset(months=6))]
-    df_test['AccountBalance'] = df_test['AccountBalance'] - min(df_test['AccountBalance'])
+    df_test.loc[:, 'AccountBalance'] = df_test['AccountBalance'] - df_test['AccountBalance'].min()
     return df_test
 
 
 def calculate_smart_budget(data):
     #create time serie and load model
-    ts = TimeSeries.from_dataframe(data,time_col='Date',value_cols= 'AccountBalance')
+    ts = TimeSeries.from_dataframe(data, time_col='Date', value_cols='AccountBalance', fill_missing_dates=True, freq='D')
     model_RNN = RNNModel.load_from_checkpoint('LSTM RNN', work_dir='../reach_model')
 
     trf = Scaler()
@@ -72,17 +72,15 @@ def calculate_smart_budget(data):
     current_budget = -(data_filt['amount'].sum()/len(data_filt))
 
     new_budget = current_budget - daily_save
+    print(new_budget)
+    total_save = np.round(daily_save * 365)
     if new_budget < 30 or new_budget > 80:
-        return np.round(np.random.uniform(40,70),2)
+        return np.round(np.random.uniform(50,65),2), total_save
+    return np.round(new_budget,2), total_save
 
-    return np.round(new_budget,2)
 
-if __name__ == "__main__":
-    transactions = db.pull_data()
-    data = create_datasets(transactions)
-    print(data)
 #     data = create_datasets("josesm82@gmail.com")
-#     smart_budget = calculate_smart_budget(data)
+#     smart_budget = calculate_smart_budget(data)   
 #     print(smart_budget)
 
 
